@@ -1,7 +1,7 @@
 #!/bin/bash
 ROOT_DIR=${ROOT_DIR:-"$(dirname $(cd "$(dirname $0)";pwd) )"}
 SRC_DIR=${SRC_DIR:-"$ROOT_DIR/repo"}
-DEST_DIR=${DEST_DIR:-"$ROOT_DIR/results"}
+DEST_DIR=${DEST_DIR:-"$ROOT_DIR/docs"}
 
 SRCS=( $(find $SRC_DIR -maxdepth 1 -mindepth 1 -type d|while read l;do basename $l;done) )
 TARGETS=""

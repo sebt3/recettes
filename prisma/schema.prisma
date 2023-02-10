@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator typegraphql {
+  provider = "typegraphql-prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Unit {
+  id        Int                @id @default(autoincrement())
+  name      String             @unique
+  createdAt DateTime           @default(now())
+  to        UnitRelation[]     @relation("fromUnit")
+  from      UnitRelation[]     @relation("toUnit")
+  buy       Ingredient[]
+  use       RecipeIngredient[]
+}
+
+model UnitRelation {
+  fromId    Int
+  from      Unit     @relation("fromUnit", fields: [fromId], references: [id])
+  toId      Int
+  to        Unit     @relation("toUnit", fields: [toId], references: [id])
+  ratio     Float    @default(1000)
+  createdAt DateTime @default(now())
+
+  @@id([fromId, toId])
+}
+
+model Ingredient {
+  id        Int                @id @default(autoincrement())
+  name      String             @unique
+  price     Float              @default(0)
+  unitId    Int
+  unit      Unit               @relation(fields: [unitId], references: [id])
+  createdAt DateTime           @default(now())
+  recipes   RecipeIngredient[]
+}
+
+model Material {
+  id        Int              @id @default(autoincrement())
+  name      String           @unique
+  createdAt DateTime         @default(now())
+  recipes   RecipeMaterial[]
+}
+
+model Category {
+  id        Int              @id @default(autoincrement())
+  name      String           @unique
+  createdAt DateTime         @default(now())
+  recipes   Recipe[]
+}
+
+model Recipe {
+  id          Int                @id @default(autoincrement())
+  name        String             @unique
+  description String?
+  createdAt   DateTime           @default(now())
+  categoryId  Int
+  category    Category           @relation(fields: [categoryId], references: [id])
+  steps       Step[]
+  materials   RecipeMaterial[]
+  ingredients RecipeIngredient[]
+}
+
+model Step {
+  recipeId       Int
+  recipe         Recipe           @relation(fields: [recipeId], references: [id])
+  stepNo         Int              @default(1)
+  description    String
+  createdAt      DateTime         @default(now())
+  materials      StepMaterial[]
+  ingredients    StepIngredient[]
+
+  @@unique([recipeId, stepNo])
+}
+
+model RecipeMaterial {
+  recipeId     Int
+  recipe       Recipe         @relation(fields: [recipeId], references: [id])
+  materialId   Int
+  material     Material       @relation(fields: [materialId], references: [id])
+  createdAt    DateTime       @default(now())
+  Steps        StepMaterial[]
+
+  @@unique([recipeId, materialId])
+}
+
+model RecipeIngredient {
+  recipeId       Int
+  ingredientId   Int
+  recipe         Recipe           @relation(fields: [recipeId], references: [id])
+  ingredient     Ingredient       @relation(fields: [ingredientId], references: [id])
+  unitId         Int
+  unit           Unit             @relation(fields: [unitId], references: [id])
+  quantity       Float            @default(0)
+  createdAt      DateTime         @default(now())
+  Steps          StepIngredient[]
+
+  @@unique([recipeId, ingredientId])
+}
+
+model StepMaterial {
+  recipeId   Int
+  stepNo     Int
+  step       Step           @relation(fields: [recipeId, stepNo], references: [recipeId, stepNo])
+  materialId Int
+  material   RecipeMaterial @relation(fields: [recipeId, materialId], references: [recipeId, materialId])
+  createdAt  DateTime       @default(now())
+
+  @@unique([recipeId, stepNo, materialId])
+}
+
+model StepIngredient {
+  recipeId     Int
+  stepNo       Int
+  step         Step             @relation(fields: [recipeId, stepNo], references: [recipeId, stepNo])
+  ingredientId Int
+  ingredient   RecipeIngredient @relation(fields: [recipeId, ingredientId], references: [recipeId, ingredientId])
+  createdAt    DateTime         @default(now())
+
+  @@unique([recipeId, stepNo, ingredientId])
+}

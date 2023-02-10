@@ -1,0 +1,10 @@
+#app .column .message {
+    @each $name, $components in $colors {
+      $color: nth($components, 1);
+      $color-invert: nth($components, 2);
+      &.is-#{$name} li.is-hover {
+        background-color: bulmaDarken($color, 5%);
+        color: $color-invert;
+      }
+    }
+}

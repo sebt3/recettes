@@ -1,0 +1,46 @@
+@import "~bulma/sass/utilities/_all.sass";
+.menu {
+    @each $name, $components in $colors {
+      $color: nth($components, 1);
+      $color-invert: nth($components, 2);
+      $color-light: null;
+      $color-dark: null;
+  
+      @if length($components) >= 3 {
+        $color-light: nth($components, 3)
+      } @else {
+        $color-lightning: max((100% - lightness($color)) - 2%, 0%);
+        $color-light: lighten($color, $color-lightning)
+      }
+      &.is-#{$name} {
+        background-color: $color;
+        color: $color-invert;
+        .menu-label {
+          color: $color-light;
+        }
+        .menu-list a {
+          color: $color-light;
+          &:hover, &.is-hovered {
+            background-color: bulmaDarken($color, 2.5%);
+            color: $color-invert;
+          }
+          &.is-active {
+            background-color: bulmaDarken($color, 5%);
+            color: $color-invert;
+          }
+        }
+      }
+    }
+}
+#app>.columns {
+    align-items: stretch;
+}
+
+#app .column aside.menu {
+  @media screen and (min-width: $tablet) {
+    min-height: 100vh;
+  }
+  padding-top: 3rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}

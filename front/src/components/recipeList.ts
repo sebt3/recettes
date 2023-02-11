@@ -1,33 +1,6 @@
-import { DBComponent, Component, Selection, GraphQLClient, gql } from '../lib/component'
+import { DBComponent, Component, Selection, GraphQLClient } from '../lib/component'
 import { App } from './app'
-
-const listAll = gql`
-query listAllCategories {
-  categories {
-    id
-    name
-    recipes {
-      id
-      name
-      description
-    }
-  }
-}
-`
-interface RecipesItem {
-    id: number
-    name: string
-    description: string
-}
-interface listAllCategoriesItem {
-    id: number
-    name: string
-    recipes: Array<RecipesItem>
-}
-interface listAllCategoriesReturn {
-    categories:Array<listAllCategoriesItem>
-}
-
+import { listAll, listAllCategoriesReturn } from './queries'
 
 export class RecipeListView extends DBComponent {
     constructor(client: GraphQLClient, parent: Component, root: Selection) {

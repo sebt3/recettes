@@ -15,7 +15,7 @@
   },
   "keywords": [],
   "author": "Sébastien Huss <sebastien.huss@gmail.com>",
-  "license": "3-Clause BSD",
+  "license": "BSD-3-Clause",
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },

@@ -6,10 +6,10 @@ export class App extends Component {
     viewer : RecipeView
     list : RecipeListView
     client : GraphQLClient
-    constructor(selector: string = '#app') {
+    constructor(selector = '#app') {
         super(new Selection().select(selector))
-        this.client = new GraphQLClient('/graphql/', { headers: {} })
-        var section = this.add('section').classed('section is-paddingless columns')
+        this.client = new GraphQLClient('graphql/', { headers: {} })
+        const section = this.add('section').classed('section is-paddingless columns')
         this.list = new RecipeListView(this.client, this, section)
         this.viewer = new RecipeView(this.client, this, section)
     }

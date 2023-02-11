@@ -2,13 +2,16 @@
 
 Un petit projet pour stocker et afficher mes recettes de produits ménagers
 
-> Warning: Aucune authentification un middleware d'authentification (type authelia) sera requis 
+> Warning: Aucune authentification ! Un middleware d'authentification (type authelia) sera requis 
 
 ## Technos
 - Typescript
+- eslint
 - Prisma
 - GraphQL
 - Bulma
+- Prometheus
+- k8s & Docker
 
 ## Develop
 
@@ -23,7 +26,7 @@ cd ..
 Then same thing for the backend:
 ```shell
 yarn
-yarn init:prisma
-yarn init:db
+yarn prisma:gen
+yarn prisma:deploy
 yarn dev
 ```

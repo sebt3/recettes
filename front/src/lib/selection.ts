@@ -10,12 +10,13 @@ const namespaces: Hash<string> = {
 }
 class Namespaced {
     name: string;
-    space: string = "";
+    space = "";
     constructor(name:string) {
-        var prefix = name += "", i = prefix.indexOf(":");
+        let prefix = name += ""
+        const i = prefix.indexOf(":");
         if (i >= 0 && (prefix = name.slice(0, i)) !== "xmlns") name = name.slice(i + 1);
         this.name = name
-        if (namespaces.hasOwnProperty(prefix))
+        if (Object.prototype.hasOwnProperty.call(namespaces, prefix))
             this.space = namespaces[prefix]
     }
 }
@@ -27,6 +28,7 @@ class AttrHandler extends Namespaced {
             obj.setAttributeNS(namespaces.xhtml, this.name, value)
         else
             obj.setAttribute(this.name, value)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         obj[this.name] = value
     }
@@ -41,7 +43,7 @@ class AttrHandler extends Namespaced {
 }
 class Builder extends Namespaced {
     add(parent: Element): Element {
-        var elem : Element
+        let elem : Element
         if (this.space !== "")
             elem = parent.ownerDocument.createElementNS(this.space, this.name)
         else if(parent.namespaceURI == namespaces.xhtml && parent.ownerDocument.documentElement.namespaceURI == namespaces.xhtml)
@@ -70,22 +72,22 @@ export class Selection {
     }
 
     public select(selector: string): Selection {
-        var group: Array<Element> = [];
+        let group: Array<Element> = [];
         this.group.forEach(node => {
-            group.push.apply(group, Array.from(node.querySelectorAll(selector)))
+            group = [...group, ...Array.from(node.querySelectorAll(selector))]
         })
         return new Selection(group)
     }
 
     public add(type:string) : Selection {
-        var builder = new Builder(type)
-        var group: Array<Element> = [];
+        const builder = new Builder(type)
+        const group: Array<Element> = [];
         this.group.forEach(node => group.push(builder.add(node)))
         return new Selection(group)
     }
 
     public on(id:string, handle:EventHandler):Selection {
-        var type:string = id.trim().split('.')[0];
+        const type = id.trim().split('.')[0];
         this.group.forEach((node, i) => {
             this.handlers[`${id}-${i}`] = {type: type, handler: (event:Event) => {
                 handle(node,event)
@@ -99,7 +101,7 @@ export class Selection {
         return this
     }
 
-    public classed(classes: string, active: boolean = true) : Selection {
+    public classed(classes: string, active = true) : Selection {
         classes.trim().split(/^|\s+/).forEach(cl => {
             this.group.forEach(node => {
                 if (active)
@@ -130,11 +132,13 @@ export class Selection {
         return this
     }
     public attr(name: string, value: string) : Selection {
-        var handler = new AttrHandler(name)
+        const handler = new AttrHandler(name)
         this.group.forEach(node => handler.add(node, value))
         return this
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public property(name: string, value: any) : Selection {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this.group.forEach(node => node[name] = value)
         return this
@@ -143,6 +147,7 @@ export class Selection {
     public clearContents(): Selection {
         this.group.forEach(node => {
             while (node.firstChild) 
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 node.removeChild(node.lastChild)
         })

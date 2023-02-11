@@ -145,14 +145,14 @@ async function stepIngredientUpsert(stepIngredientList: Array<Prisma.StepIngredi
 }
 
 async function lessive_liquide(cats: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>>, units: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>>, ingredients: Array<Prisma.IngredientGetPayload<Prisma.IngredientUpsertArgs>>, materials: Array<Prisma.MaterialGetPayload<Prisma.MaterialUpsertArgs>>) {
-    let recipes: Array<Prisma.RecipeGetPayload<Prisma.RecipeUpsertArgs>> = []
+    const recipes: Array<Prisma.RecipeGetPayload<Prisma.RecipeUpsertArgs>> = []
     await recipeUpsert([{
             name: 'Lessive liquide',
             description: 'Lessive liquide. A mettre dans une demi visirette, secouer avant usage.',
             categoryId: cats['Ménage'].id
     }], recipes)
-    let r = recipes[0].id, bidon = materials[0].id, sceau = materials[3].id, mixeur = materials[5].id
-    let hoteau = ingredients[0].id, eau = ingredients[1].id, savon = ingredients[8].id, soude = ingredients[3].id
+    const r = recipes[0].id, bidon = materials[0].id, sceau = materials[3].id, mixeur = materials[5].id
+    const hoteau = ingredients[0].id, eau = ingredients[1].id, savon = ingredients[8].id, soude = ingredients[3].id
 
     await recipeMaterialUpsert([
         { recipeId: r, materialId: bidon },
@@ -188,13 +188,13 @@ async function lessive_liquide(cats: IHash<Prisma.UnitGetPayload<Prisma.UnitUpse
     ], [])
 }
 async function dentifrice(cats: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>>, units: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>>, ingredients: Array<Prisma.IngredientGetPayload<Prisma.IngredientUpsertArgs>>, materials: Array<Prisma.MaterialGetPayload<Prisma.MaterialUpsertArgs>>) {
-    let recipes: Array<Prisma.RecipeGetPayload<Prisma.RecipeUpsertArgs>> = []
+    const recipes: Array<Prisma.RecipeGetPayload<Prisma.RecipeUpsertArgs>> = []
     await recipeUpsert([{
             name: 'Dentifrice',
             description: 'Un dentifrice à la menthe simple et efficace',
             categoryId: cats['Ménage'].id
     }], recipes)
-    let r = recipes[0].id, bocal = materials[1].id, soude = ingredients[3].id, coco = ingredients[6].id, huile = ingredients[5].id
+    const r = recipes[0].id, bocal = materials[1].id, soude = ingredients[3].id, coco = ingredients[6].id, huile = ingredients[5].id
 
     await recipeMaterialUpsert([
         { recipeId: r, materialId: bocal },
@@ -218,14 +218,14 @@ async function dentifrice(cats: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArg
     ], [])
 }
 async function pastille_wc(cats: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>>, units: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>>, ingredients: Array<Prisma.IngredientGetPayload<Prisma.IngredientUpsertArgs>>, materials: Array<Prisma.MaterialGetPayload<Prisma.MaterialUpsertArgs>>) {
-    let recipes: Array<Prisma.RecipeGetPayload<Prisma.RecipeUpsertArgs>> = []
+    const recipes: Array<Prisma.RecipeGetPayload<Prisma.RecipeUpsertArgs>> = []
     await recipeUpsert([{
             name: 'Pastille WC',
             description: 'Pastille pour WC. Mettre dans la cuvette, revenir 15mn après pour frotter.',
             categoryId: cats['Ménage'].id
     }], recipes)
-    let r = recipes[0].id, moule = materials[2].id, spray = materials[4].id
-    let eau = ingredients[1].id, soude = ingredients[3].id, acide = ingredients[2].id, huile = ingredients[5].id
+    const r = recipes[0].id, moule = materials[2].id, spray = materials[4].id
+    const eau = ingredients[1].id, soude = ingredients[3].id, acide = ingredients[2].id, huile = ingredients[5].id
 
     await recipeMaterialUpsert([
         { recipeId: r, materialId: moule },
@@ -256,14 +256,14 @@ async function pastille_wc(cats: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertAr
     ], [])
 }
 async function spray(cats: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>>, units: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>>, ingredients: Array<Prisma.IngredientGetPayload<Prisma.IngredientUpsertArgs>>, materials: Array<Prisma.MaterialGetPayload<Prisma.MaterialUpsertArgs>>) {
-    let recipes: Array<Prisma.RecipeGetPayload<Prisma.RecipeUpsertArgs>> = []
+    const recipes: Array<Prisma.RecipeGetPayload<Prisma.RecipeUpsertArgs>> = []
     await recipeUpsert([{
             name: 'Spray nettoyant',
             description: 'Un spray nettoyant/désinfectant tout usage',
             categoryId: cats['Ménage'].id
     }], recipes)
-    let r = recipes[0].id, spray = materials[4].id
-    let vinaigre = ingredients[9].id, jus = ingredients[7].id, huile = ingredients[4].id
+    const r = recipes[0].id, spray = materials[4].id
+    const vinaigre = ingredients[9].id, jus = ingredients[7].id, huile = ingredients[4].id
 
     await recipeMaterialUpsert([
         { recipeId: r, materialId: spray },
@@ -305,7 +305,7 @@ async function relationUpsert(relationList: Array<Prisma.UnitRelationUncheckedCr
 }
 
 async function main() {
-    let units: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>> = {}
+    const units: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>> = {}
     await unitUpsert(['g','kg','ml','l','goutte'], units)
 
     await relationUpsert([
@@ -327,7 +327,7 @@ async function main() {
     ],[])
 
 
-    let ingredients: Array<Prisma.IngredientGetPayload<Prisma.IngredientUpsertArgs>> = []
+    const ingredients: Array<Prisma.IngredientGetPayload<Prisma.IngredientUpsertArgs>> = []
     await ingredientUpsert([
             { name: 'Eau chaude', unitId: units['l'].id },
             { name: 'Eau',        unitId: units['l'].id },
@@ -341,7 +341,7 @@ async function main() {
             { name: 'Vinaigre blanc', unitId: units['l'].id },
         ], ingredients)
 
-    let materials: Array<Prisma.MaterialGetPayload<Prisma.MaterialUpsertArgs>> = []
+    const materials: Array<Prisma.MaterialGetPayload<Prisma.MaterialUpsertArgs>> = []
     await materialUpsert([
             { name: 'Bidon de 5l' },
             { name: 'Bocal' },
@@ -351,7 +351,7 @@ async function main() {
             { name: 'Mixeur plongeant' },
         ], materials)
 
-    let cats: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>> = {}
+    const cats: IHash<Prisma.UnitGetPayload<Prisma.UnitUpsertArgs>> = {}
     await catUpsert(['Ménage'], cats)
 
     await lessive_liquide(cats, units, ingredients, materials)

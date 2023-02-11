@@ -41,20 +41,20 @@ export class RecipeListView extends DBComponent {
     }
 
     update() {
-        var app = this.parent as App
-        var recId = -1
+        const app = this.parent as App
+        let recId = -1
         this.clearContents()
         this.client.request(listAll).then((data: listAllCategoriesReturn) => {
             data.categories.forEach(cat => {
                 this.add('p').classed('menu-label').text(cat.name)
-                var lst = this.add('ul').classed('menu-list')
+                const lst = this.add('ul').classed('menu-list')
                 cat.recipes.forEach(recipe => {
                     if (recId<0)
                         recId = recipe.id
                     lst.add('li').add('a').text(recipe.name).attr('id',`rec${recipe.id}`)
-                    .on('click',(item: Element, event:Event)=>{
+                    .on('click',()=>{
                       app.viewer.display(recipe.id)
-                  }) 
+                  })
                 });
             })
             if (recId>=0)

@@ -1,0 +1,146 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/name: recettes
+    app.kubernetes.io/component: db
+  name: recettes-db
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/name: recettes
+    app.kubernetes.io/component: app
+  name: recettes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: default
+      app.kubernetes.io/name: recettes
+      app.kubernetes.io/component: app
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "4000"
+      labels:
+        app.kubernetes.io/instance: default
+        app.kubernetes.io/name: recettes
+        app.kubernetes.io/component: app
+    spec:
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        fsGroup: 1000
+      volumes:
+      - name: db
+        persistentVolumeClaim:
+          claimName: recettes-db
+      initContainers:
+      - name: deploy
+        image: registry:80/recettes:0.1.0
+        command: ["npx", "prisma", "migrate", "deploy"]
+        volumeMounts:
+        - name: db
+          mountPath: /data/
+        securityContext:
+          runAsNonRoot: true
+      - name: seed
+        image: registry:80/recettes:0.1.0
+        command: ["node", "prisma/seed.js"]
+        volumeMounts:
+        - name: db
+          mountPath: /data/
+        securityContext:
+          runAsNonRoot: true
+      containers:
+      - name: app
+        image: registry:80/recettes:0.1.0
+        ports:
+        - name: app
+          containerPort: 4000
+          protocol: TCP
+        volumeMounts:
+          - name: db
+            mountPath: /data/
+        securityContext:
+          runAsNonRoot: true
+      - name: editor
+        image: registry:80/recettes:0.1.0
+        command: ["npx", "prisma", "studio", "--browser", "none"]
+        ports:
+        - name: editor
+          containerPort: 5555
+          protocol: TCP
+        volumeMounts:
+          - name: db
+            mountPath: /data/
+        securityContext:
+          runAsNonRoot: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/name: recettes
+    app.kubernetes.io/component: app
+  name: recettes
+spec:
+  ports:
+  - name: app
+    port: 80
+    protocol: TCP
+    targetPort: app
+  - name: editor
+    port: 8000
+    protocol: TCP
+    targetPort: editor
+  selector:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/name: recettes
+    app.kubernetes.io/component: app
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/name: recettes
+    app.kubernetes.io/component: app
+  name: recettes
+spec:
+  rules:
+  - host: recettes.media.home
+    http:
+      paths:
+      - backend:
+          service:
+            name: recettes
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: editor.recettes.media.home
+    http:
+      paths:
+      - backend:
+          service:
+            name: recettes
+            port:
+              number: 8000
+        path: /
+        pathType: Prefix

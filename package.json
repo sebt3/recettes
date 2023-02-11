@@ -4,22 +4,27 @@
   "description": "",
   "main": "server/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "studio": "prisma studio --browser none",
     "prisma:gen": "prisma generate",
+    "prisma:deploy": "prisma migrate deploy",
     "prisma:migrate": "prisma migrate dev --name init",
     "prisma:seed": "prisma db seed",
+    "lint": "eslint .",
     "build": "tsc",
+    "studio": "prisma studio --browser none",
     "dev": "ts-node-dev --no-notify --respawn --transpile-only server/index.ts"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Sébastien Huss <sebastien.huss@gmail.com>",
+  "license": "3-Clause BSD",
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
+    "@typescript-eslint/parser": "^5.51.0",
     "class-validator": "^0.14.0",
+    "eslint": "^8.34.0",
     "ts-node-dev": "^2.0.0",
     "typegraphql-prisma": "^0.23.5",
     "typescript": "^4.9.5"
@@ -27,11 +32,15 @@
   "dependencies": {
     "@apollo/server": "^4.3.2",
     "@prisma/client": "^4.10.1",
+    "@talabes/apollo-prometheus-plugin": "^3.0.0",
     "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
+    "express-prom-bundle": "^6.6.0",
     "graphql": "^16.6.0",
     "graphql-fields": "^2.0.3",
     "prisma": "^4.10.1",
+    "prom-client": "^14.1.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^2.0.0-beta.1"
   }

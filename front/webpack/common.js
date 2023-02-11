@@ -29,7 +29,6 @@ module.exports = {
         use: {
           loader: 'ts-loader',
           options: {
-            // disable type checker - we will use it in fork plugin
             transpileOnly: true
           }
         }
@@ -57,8 +56,6 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
       filename: '[name].[contenthash].css',
       chunkFilename: '[id].css'
     }),

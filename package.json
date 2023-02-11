@@ -6,9 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "studio": "prisma studio --browser none",
-    "db:init": "prisma migrate dev --name init",
-    "db:seed": "prisma db seed",
-    "postinstall": "prisma generate",
+    "prisma:gen": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:seed": "prisma db seed",
+    "build": "tsc",
     "dev": "ts-node-dev --no-notify --respawn --transpile-only server/index.ts"
   },
   "keywords": [],
@@ -18,7 +19,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "devDependencies": {
-    "prisma": "^4.10.1",
+    "class-validator": "^0.14.0",
     "ts-node-dev": "^2.0.0",
     "typegraphql-prisma": "^0.23.5",
     "typescript": "^4.9.5"
@@ -27,10 +28,10 @@
     "@apollo/server": "^4.3.2",
     "@prisma/client": "^4.10.1",
     "body-parser": "^1.20.1",
-    "class-validator": "^0.14.0",
     "express": "^4.18.2",
     "graphql": "^16.6.0",
     "graphql-fields": "^2.0.3",
+    "prisma": "^4.10.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^2.0.0-beta.1"
   }

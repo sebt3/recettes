@@ -30,11 +30,8 @@ interface listAllCategoriesReturn {
 
 
 export class RecipeListView extends DBComponent {
-    //list: Selection
     constructor(client: GraphQLClient, parent: Component, root: Selection) {
         super(client, parent, root.add('div').classed('column is-2').add('aside').classed('menu section is-primary'))
-        /*this.add('p').classed('menu-label').text('Menage')
-        this.list = this.add('ul').classed('menu-list')*/
         this.update()
     }
 

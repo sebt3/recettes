@@ -1,4 +1,3 @@
-@import "~bulma/sass/utilities/_all.sass";
 .menu {
     @each $name, $components in $colors {
       $color: nth($components, 1);

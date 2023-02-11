@@ -2,10 +2,8 @@
 # Keep environment variables out of version control
 /.env
 /package-lock.json
-/yarn.lock
 /prisma/dev.db
-/prisma/migrations
 /front/package-lock.json
 /front/node_modules
-/front/yarn.lock
 /public
+/dist

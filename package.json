@@ -8,10 +8,20 @@
     "prisma:deploy": "prisma migrate deploy",
     "prisma:migrate": "prisma migrate dev --name init",
     "prisma:seed": "prisma db seed",
+    "front:install": "yarn --cwd front install",
+    "front:dev": "yarn --cwd front run dev",
+    "front:build": "yarn --cwd front run build",
+    "front:clean": "yarn --cwd front run clean",
     "lint": "eslint .",
     "build": "tsc",
+    "postbuild": "ts-node scripts/prepack.ts",
+    "gendist:copy": "cp -Rapf prisma/migrations dist/prisma && mkdir -p dist/node_modules && cp -Rapf node_modules/@generated dist/node_modules",
+    "gendist:schema": "awk -v p=1 '/generator typegraphql/{p=0}p==1{print}/}/{p=1}' < prisma/schema.prisma > dist/prisma/schema.prisma",
+    "prepackage": "yarn build && yarn front:build && yarn gendist:copy && yarn gendist:schema",
+    "package": "npm-build-zip --source=./dist",
     "studio": "prisma studio --browser none",
-    "dev": "ts-node-dev --no-notify --respawn --transpile-only server/index.ts"
+    "dev": "ts-node-dev --no-notify --respawn --transpile-only server/index.ts",
+    "clean": "yarn front:clean && rm -rf node_modules public dist"
   },
   "keywords": [],
   "author": "Sébastien Huss <sebastien.huss@gmail.com>",
@@ -19,12 +29,16 @@
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/cors": "^2.8.13",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
     "class-validator": "^0.14.0",
     "eslint": "^8.34.0",
+    "npm-build-zip": "^1.0.3",
     "ts-node-dev": "^2.0.0",
     "typegraphql-prisma": "^0.23.5",
     "typescript": "^4.9.5"

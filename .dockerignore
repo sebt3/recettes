@@ -5,3 +5,7 @@ prisma/dev.db
 front/node_modules
 public
 dist
+spec
+fission
+scripts
+*.zip

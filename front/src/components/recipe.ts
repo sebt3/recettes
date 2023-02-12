@@ -6,18 +6,17 @@ export class RecipeView extends DBComponent {
     materiel: Selection
     ingredient: Selection
     step: Selection
+    private article(on:Selection, id:string, color:string, title:string):Selection {
+        const art = on.add(`<article id="${id}" class="message is-${color}" />`)
+        art.add(`<div class="message-header"><p>${title}</p></div>`)
+        return art.add('<div class="message-body" />')
+    }
     constructor(client: GraphQLClient, parent: Component, root: Selection) {
-        super(client, parent, root.add('div').classed('column').add('section').classed('section'))
-        const cols = this.add('div').classed('columns')
-        const imess = cols.add('div').classed('column is-half').add('article').classed('message is-success').attr('id', 'ingredient')
-        const tmess = cols.add('div').classed('column is-half').add('article').classed('message is-warning').attr('id', 'material')
-        const smess = this.add('article').classed('message is-primary').attr('id', 'step')
-        tmess.add('div').classed('message-header').add('p').text('Matériel')
-        imess.add('div').classed('message-header').add('p').text('Ingrédients')
-        smess.add('div').classed('message-header').add('p').text('Etapes')
-        this.materiel = tmess.add('div').classed('message-body').add('ul')
-        this.ingredient = imess.add('div').classed('message-body').add('ul')
-        this.step = smess.add('div').classed('message-body').add('ol')
+        super(client, parent, root.add('<div class="column" />').add('<section class="section" />'))
+        const cols = this.add('<div class="columns" />')
+        this.ingredient = this.article(cols.add('<div class="column is-half" />'),'ingredient','success','Ingrédients').addChild('ul')
+        this.materiel = this.article(cols.add('<div class="column is-half" />'),'material','warning', 'Matériel').addChild('ul')
+        this.step = this.article(this,'step','primary','Etapes').addChild('ol')
     }
 
     display(id:number) {
@@ -28,7 +27,7 @@ export class RecipeView extends DBComponent {
         this.step.clearContents()
         this.client.request(recipeQuery, vars).then((data: recipeReturn) => {
             data.recipe.ingredients.forEach(ing => {
-                this.ingredient.add('li').text(`${ing.ingredient.name} (${ing.quantity}${ing.unit.name})`).attr('id',`ing${ing.ingredientId}`)
+                this.ingredient.add(`<li id="ing${ing.ingredientId}">${ing.ingredient.name} (${ing.quantity}${ing.unit.name})</li>`)
                   .on('mouseover',(item: Element) => {
                     new Selection([item]).classed('is-hover')
                     ing.Steps.forEach(stp => {
@@ -40,7 +39,7 @@ export class RecipeView extends DBComponent {
                 })
             })
             data.recipe.materials.forEach(mat => {
-                this.materiel.add('li').text(mat.material.name).attr('id',`mat${mat.materialId}`)
+                this.materiel.add(`<li id="mat${mat.materialId}">${mat.material.name}</li>`)
                 .on('mouseover',(item: Element) => {
                     new Selection([item]).classed('is-hover')
                     mat.Steps.forEach(stp => {
@@ -52,7 +51,7 @@ export class RecipeView extends DBComponent {
                 })
             })
             data.recipe.steps.forEach(stp => {
-                this.step.add('li').text(stp.description).attr('id',`stp${stp.stepNo}`)
+                this.step.add(`<li id="stp${stp.stepNo}">${stp.description}</li>`)
                   .on('mouseover',(item: Element) => {
                     new Selection([item]).classed('is-hover')
                     stp.ingredients.forEach(ing => {

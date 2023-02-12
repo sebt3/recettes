@@ -42,6 +42,16 @@ class AttrHandler extends Namespaced {
     }
 }
 class Builder extends Namespaced {
+    gen(): Element {
+        let elem : Element
+        if (this.space !== "")
+            elem = document.createElementNS(this.space, this.name)
+        else if(document.documentElement.namespaceURI == namespaces.xhtml)
+            elem = document.createElementNS(namespaces.xhtml, this.name)
+        else
+            elem = document.createElement(this.name)
+        return elem
+    }
     add(parent: Element): Element {
         let elem : Element
         if (this.space !== "")
@@ -79,10 +89,23 @@ export class Selection {
         return new Selection(group)
     }
 
-    public add(type:string) : Selection {
+    public addChild(type:string) : Selection {
         const builder = new Builder(type)
         const group: Array<Element> = [];
         this.group.forEach(node => group.push(builder.add(node)))
+        return new Selection(group)
+    }
+    public add(html:string) : Selection {
+        const template = new Builder('template').gen() as HTMLTemplateElement
+        template.innerHTML = html.trim()
+        const group: Array<Element> = [];
+        this.group.forEach(node => {
+            Array.from(template.content.childNodes).forEach(e => {
+                const elem = e.cloneNode(true) as Element
+                node.appendChild(elem)
+                group.push(elem)
+            })
+        })
         return new Selection(group)
     }
 

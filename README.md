@@ -17,15 +17,13 @@ Un petit projet pour stocker et afficher mes recettes de produits ménagers
 
 First, build the front:
 ```shell
-cd front
-yarn
-yarn build
-cd ..
+yarn front:install
+yarn front:dev
 ```
 
 Then same thing for the backend:
 ```shell
-yarn
+yarn install
 yarn prisma:gen
 yarn prisma:deploy
 yarn dev

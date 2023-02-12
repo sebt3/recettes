@@ -4,7 +4,7 @@ import { listAll, listAllCategoriesReturn } from './queries'
 
 export class RecipeListView extends DBComponent {
     constructor(client: GraphQLClient, parent: Component, root: Selection) {
-        super(client, parent, root.add('div').classed('column is-2').add('aside').classed('menu section is-primary'))
+        super(client, parent, root.add('<div class="column is-2" />').add('<aside class="menu section is-primary" />'))
         this.update()
     }
 
@@ -19,12 +19,12 @@ export class RecipeListView extends DBComponent {
         this.clearContents()
         this.client.request(listAll).then((data: listAllCategoriesReturn) => {
             data.categories.forEach(cat => {
-                this.add('p').classed('menu-label').text(cat.name)
-                const lst = this.add('ul').classed('menu-list')
+                this.add(`<p class="menu-label">${cat.name}</p>`)
+                const lst = this.add('<ul class="menu-list" />')
                 cat.recipes.forEach(recipe => {
                     if (recId<0)
                         recId = recipe.id
-                    lst.add('li').add('a').text(recipe.name).attr('id',`rec${recipe.id}`)
+                    lst.addChild('li').add(`<a id="rec${recipe.id}">${recipe.name}</a>`)
                     .on('click',()=>{
                       app.viewer.display(recipe.id)
                   })

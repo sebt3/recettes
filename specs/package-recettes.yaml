@@ -1,0 +1,24 @@
+include:
+- recettes_1.0.0.zip
+kind: ArchiveUploadSpec
+name: recettes-1-0-0-zip-MN6y
+
+---
+apiVersion: fission.io/v1
+kind: Package
+metadata:
+  creationTimestamp: null
+  name: recettes
+spec:
+  deployment:
+    checksum: {}
+  environment:
+    name: nodejs
+    namespace: ""
+  source:
+    checksum: {}
+    type: url
+    url: archive://recettes-1-0-0-zip-MN6y
+status:
+  buildstatus: pending
+  lastUpdateTimestamp: "2023-02-12T17:55:28Z"

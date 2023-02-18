@@ -1,4 +1,4 @@
 import '../scss/main.scss';
-import { App } from './components/app';
+import { Recettes } from './components/app';
 
-new App();
+new Recettes();

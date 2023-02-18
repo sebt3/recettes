@@ -1,37 +1,54 @@
-import { DBComponent, Component, Selection, GraphQLClient } from '../lib/component'
-import { App } from './app'
-import { listAll, listAllCategoriesReturn } from './queries'
+import { gql } from 'graphql-request'
+import { Category } from '../../../node_modules/@generated/type-graphql/models'
 
-export class RecipeListView extends DBComponent {
-    constructor(client: GraphQLClient, parent: Component, root: Selection) {
-        super(client, parent, root.add('<div class="column is-2" />').add('<aside class="menu section is-primary" />'))
+import { Component } from '../lib/component'
+import { Recettes } from './app';
+
+const listAll = gql`
+query listAllCategories {
+  categories {
+    id
+    name
+    recipes {
+      id
+      name
+      description
+    }
+  }
+}
+`
+
+export class RecipeListView extends Component {
+    app:Recettes
+    constructor(app:Recettes, selector:string) {
+        app.self.select(selector).add('<aside class="menu section is-primary" />')
+        super(app, selector+' aside.menu')
+        this.app = app
         this.update()
     }
 
     highlight(id: number) {
-        this.select('li>a').classed('is-active',false)
-        this.select(`li>a#rec${id}`).classed('is-active')
+        this.self.select('li>a').classed('is-active',false)
+        this.self.select(`li>a#rec${id}`).classed('is-active')
     }
 
     update() {
-        const app = this.parent as App
         let recId = -1
-        this.clearContents()
-        this.client.request(listAll).then((data: listAllCategoriesReturn) => {
+        this.node.innerHTML=""
+        this.app.client.request(listAll).then((data: {categories:Array<Partial<Category>>}) => {
             data.categories.forEach(cat => {
-                this.add(`<p class="menu-label">${cat.name}</p>`)
-                const lst = this.add('<ul class="menu-list" />')
-                cat.recipes.forEach(recipe => {
+                this.self.add(`<p class="menu-label">${cat.name}</p>`)
+                const lst = this.self.add('<ul class="menu-list" />')
+                if (cat.recipes !== undefined) cat.recipes.forEach(recipe => {
                     if (recId<0)
                         recId = recipe.id
-                    lst.addChild('li').add(`<a id="rec${recipe.id}">${recipe.name}</a>`)
-                    .on('click',()=>{
-                      app.viewer.display(recipe.id)
-                  })
+                    lst.add('<li />').add(`<a id="rec${recipe.id}">${recipe.name}</a>`).on('click',()=>{
+                        this.app.viewer.display(recipe.id)
+                    })
                 });
             })
             if (recId>=0)
-                app.viewer.display(recId)
+                this.app.viewer.display(recId)
         })
     }
 }
